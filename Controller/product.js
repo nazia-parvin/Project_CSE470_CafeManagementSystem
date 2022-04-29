@@ -19,7 +19,7 @@ router.post('/add', auth.authenticateToken, checkRole.checkRole, (req, res) => {
 });
 
 router.get('/get', auth.authenticateToken, (req, res, next) => {
-    var query = "select p.id,p.name,p.descrption,p.price,p.status,c.id as categoryId,c.name as categoryName from product as p INNER JOIN category as c where p.categoryId = c.id";
+    var query = "select p.id,p.name,p.description,p.price,p.status,c.id as categoryId,c.name as categoryName from product as p INNER JOIN category as c where p.categoryId = c.id";
     connection.query(query, (err, results) => {
         if (!err) {
             return res.status(200).json(results);
@@ -30,9 +30,9 @@ router.get('/get', auth.authenticateToken, (req, res, next) => {
     });
 });
 
-router.get('getByCategory/:id', auth.authenticateToken, (req, res, next) => {
+router.get('/getByCategory/:id', auth.authenticateToken, (req, res, next) => {
     const id = req.params.id;
-    var query = "select id,name from product where categoryId= ? and status = 'true";
+    var query = "select id,name from product where categoryId= ? and status = 'true'";
     connection.query(query, [id], (err, results) => {
         if (!err) {
             return res.status(200).json(results);
@@ -58,7 +58,7 @@ router.get('/getById/:id', auth.authenticateToken, (req, res,next)=>{
 
 router.patch('/update',auth.authenticateToken,checkRole.checkRole,(req,res,next)=>{
     let product = req.body;
-    var query = "update product set anme=?,categoryId=?,description=?,price=? where id=?";
+    var query = "update product set name=?,categoryId=?,description=?,price=? where id=?";
     connection.query(query,[product.name,product.categoryId,product.description,product.price,product.id],(err,results)=>{
         if(!err){
             if(results.affectedRows == 0){
@@ -75,11 +75,11 @@ router.patch('/update',auth.authenticateToken,checkRole.checkRole,(req,res,next)
 
 router.delete('/delete/:id',auth.authenticateToken,checkRole.checkRole,(req,res,next)=>{
     const id = req.params.id;
-    var query = "delete from product where id=?";
+    var query = "delete from product where id= ?";
     connection.query(query,[id],(err,results)=>{
         if(!err){
             if(results.affectedRows == 0){
-                return res.status(400).json({message: "Product ID is not found"});
+                return res.status(404).json({message: "Product ID is not found"});
             }
             return res.status(200).json({message:"Product deleted succesfully"})
         }
@@ -91,10 +91,10 @@ router.delete('/delete/:id',auth.authenticateToken,checkRole.checkRole,(req,res,
 
 router.patch('updateStatus',auth.authenticateToken,checkRole.checkRole,(req,res,next)=>{
     let user = req.body;
-    var query = "update product set status=? where id=?";
-    connection.query(query,[user.status,user.id],(err,res)=>{
+    var query = "update product set status= ? where id= ?";
+    connection.query(query,[user.status,user.id],(err,results)=>{
         if(!err){
-            if(results.affectedRows ==0){
+            if(results.affectedRows == 0){
                 return res.status(404).json({message:"Product ID is not found"});
             }
             return res.status(200).json({message: "Product Status updated successfully"});

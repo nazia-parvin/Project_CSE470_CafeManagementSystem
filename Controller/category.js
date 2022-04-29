@@ -31,7 +31,7 @@ router.get('/get',auth.authenticateToken,(req,res,next)=>{
 
 router.patch('/update',auth.authenticateToken,checkRole.checkRole,(req,res,next)=>{
     let product = req.body;
-    var query = "update category set name=? id=?";
+    var query = "update category set name=? where id=?";
     connection.query(query,[product.name,product.id],(err,results)=>{
         if(!err){
             if (results.affectedRows == 0){
@@ -42,7 +42,7 @@ router.patch('/update',auth.authenticateToken,checkRole.checkRole,(req,res,next)
         else{
             return res.status(500).json(err);
         }
-    })
-})
+    });
+});
 
 module.exports = router;
