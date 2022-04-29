@@ -3,12 +3,13 @@ const connection = require('../Model');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 // const nodemailer = require('nodemailer');
-require('dotenv').config();
+ require('dotenv').config();
 
-//const sendEmail = require('../email/mock') // For mocking email, check console log for email checking
-const sendEmail = require('../email/gmail') // For gmail
+const sendEmail = require('../email/mock') // For mocking email, check console log for email checking
+// const sendEmail = require('../email/gmail') // For gmail
 var auth = require('../services/authentication');
 var checkRole = require('../services/checkRole');
+const res = require('express/lib/response');
 
 router.post('/signup', (req, resp) => {
     let user = req.body;
@@ -57,8 +58,52 @@ router.post("/login", (req, resp) => {
             return resp.status(500).json(err);
     });
 });
+//////
+// var transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: process.env.EMAIL,
+//         pass: process.env.PASSWORD
+//     }
+// });
+//////
 
-router.post("/forgotPassword", (req, resp) => {
+// router.post("/forgotPassword", (req, resp) => {
+//     const user = req.body;
+//     query = "select email, password from user where email=?";
+//     connection.query(query, [user.email],(err, results) => {
+        
+//         if (!err) {
+//             if (results.length <= 0){
+//                 ///console.log("Email not in the database");
+//                 return res.status(200).json({message:"Password sent Successfully."});
+//             }
+//             else {
+//                 // let result = await sendEmail(results[0].email,process.env.EMAIL_USER,"Password by Cafe Management System",`<p><b>Your login details</b><br/><b>Email:</b> ${results[0].email}<br/><b>Password:</b> ${results[0].password}<br/><br/><a href='${req.protocol + '://' + req.get("host")}' target='_blank' rel='noopener noreferrer'>Click here to login with your credentials</a></p>`);
+//                 // console.log("Result - " + result); // If you want to log what result was
+//                 var mailOptions ={
+//                     from: process.env.EMAIL,
+//                     to: results[0].email,
+//                     subject: 'Password by Cafe Management System',
+//                     html: '<p><b>Your Login details for Cafe Management System</b><br><b>Email: </b>'+results[0].email+'<br><b>Password: </b>' +results[0].password+'<br><a href="http://localhost:4200">Click here to login</a></p>'
+//                 };
+//                 transporter.sendMail(mailOptions,function(error,info){
+//                     if(error){
+//                         console.log(error);
+//                     }
+//                     else{
+//                         console.log('Email sent: '+info.response);
+//                     }
+//                 });
+//                 return res.status(200).json({message:"Password sent Successfully."});
+//             }
+//         }
+//         else
+//             return resp.status(500).json(err);
+//     });
+  
+// });
+router.post("/forgotpassword", (req, resp) => {
     const user = req.body;
     query = "select email, password from user where email=?";
     connection.query(query, [user.email], async (err, results) => {
@@ -78,7 +123,7 @@ router.post("/forgotPassword", (req, resp) => {
     return resp.status(200).json({ message: "If the email associated matches with our records then we will send you details." });
 });
 
-router.get("/get",auth.authenticateToken, checkRole.checkRole, (req,resp) => {
+router.get("/", (req,resp) => {
     let query = "select id, name, contact_number, email, status from user where role ='user'";
     connection.query(query,(err,results)=>{
         if (!err)
@@ -92,20 +137,20 @@ router.get("/get",auth.authenticateToken, checkRole.checkRole, (req,resp) => {
     });
 });
 
-router.patch("/update",auth.authenticateToken,checkRole.checkRole,(req, resp)=>{
+router.patch("/update",auth.authenticateToken,checkRole.checkRole,(req, res)=>{
     let user = req.body;
-    let query = "update user set status =? where id=? and email!='admin@admin.com'";
+    let query = "update user set status=? where id=? ";
     connection.query(query,[user.status,user.id],(err,results)=>{
         if(!err) {
-            if(results.affectedRows === 1){
-                resp.status(200).json({message:"Update successfully"})
+            if(results.affectedRows == 1){
+                return res.status(200).json({message:"User updated successfully."})
             }
             else {
-                resp.status(400).json({message:"Issue updating the status. Please provide correct id."})
+                return res.status(400).json({message:"Issue updating the status. Please provide correct id."})
             }
         }
         else
-            resp.status(500).json(err);
+            return res.status(500).json(err);
     });
 });
 
@@ -120,7 +165,7 @@ router.post('/changePassword',(req,resp)=>{
     connection.query(query,[user.password,user.email,user.newPassword],(err,results)=>{
         if(!err)
         {
-            if(results.affectedRows==1)
+            if(results.affectedRows == 1)
                 return resp.status(200).json({message:"Password successfully updated"});
             else
                 return resp.status(400).json({message: "Issue updating password for given email"});
