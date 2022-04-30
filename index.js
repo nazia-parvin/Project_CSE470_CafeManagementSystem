@@ -4,9 +4,8 @@ const connection = require('./Model');
 const userRoute = require('./Controller/user');
 const categoryRoute = require('./Controller/category');
 const productsRoute = require('./Controller/product');
-const billRoute = require('./Controller/bill');
+const billRoute = require('./Controller/bill'); 
 const app = express();
-
 
 app.use(cors());
 app.use(express.urlencoded({extended:true}));
@@ -14,7 +13,7 @@ app.use(express.json());
 app.use('/user', userRoute);
 app.use('/category', categoryRoute);
 app.use('/product', productsRoute);
-app.use('./bill', billRoute);
+app.use('/bill', billRoute);
 
 app.use((req, res, next) => {
     res.status(404).send("Sorry can't find that!")

@@ -34,7 +34,7 @@ create table bill(
     email varchar(255) NOT NULL,
     contact_number varchar(20) NOT NULL,
     paymentMethod varchar(50) NOT NULL,
-    total int NOT NULL ,
+    totalAmount int NOT NULL ,
     productDetails JSON DEFAULT NULL,
     createdBy varchar(255) NOT NULL,
     primary key(id)
