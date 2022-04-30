@@ -5,27 +5,42 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService {
+export class ProductService {
   url = environment.apiUrl;
 
   constructor(private httpClient: HttpClient) { }
 
   add(data: any) {
     return this.httpClient.post(this.url +
-      "/category/add/", data, {
+      "/product/add/", data, {
       headers: new HttpHeaders().set('Content-Type', "application/json")
     });
   }
 
   update(data: any) {
     return this.httpClient.patch(this.url +
-      "/category/update/", data, {
+      "/product/update/", data, {
       headers: new HttpHeaders().set('Content-Type', "application/json")
     });
   }
 
-  getCategories() {
+  getProducts() {
     return this.httpClient.get(this.url +
-      "/category/get/");
+      "/product/get/")
+  };
+
+  updateStatus(data: any) {
+    return this.httpClient.patch(this.url +
+      "/product/updatestatus/", data, {
+      headers: new HttpHeaders().set('Content-Type', "application/json")
+    });
+  }
+
+  delete(id:any){
+    return this.httpClient.delete(this.url +
+      "/product/delete/"+id, {
+      headers: new HttpHeaders().set('Content-Type', "application/json")
+    });
   }
 }
+
