@@ -1,0 +1,124 @@
+<mat-card>
+    <b><span>Manage Order</span></b>
+    <button mat-flat-button color="primary" class="float-right" [disabled]="validateSubmit()"
+        (click)="submitAction()">Submit & Get Bill</button>
+</mat-card>
+<hr>
+
+<mat-card>
+    <b><span>Customer Details:</span></b>
+    <form [formGroup]="manageOrderForm">
+        <div fxFlex fxLayout="column">
+            <div fxLayout="row wrap">
+                <mat-form-field appearance="fill" fxFlex>
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" required>
+                    <mat-error *ngIf="manageOrderForm.controls.name.touched && manageOrderForm.controls.name.invalid">
+                        <span *ngIf="manageOrderForm.controls.name.errors.required">This field is mandatory.</span>
+                        <span *ngIf="manageOrderForm.controls.name.errors.pattern">This field is Invalid.</span>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" fxFlex>
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" required>
+                    <mat-error *ngIf="manageOrderForm.controls.email.touched && manageOrderForm.controls.email.invalid">
+                        <span *ngIf="manageOrderForm.controls.email.errors.required">This field is mandatory.</span>
+                        <span *ngIf="manageOrderForm.controls.email.errors.pattern">This field is Invalid.</span>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" fxFlex>
+                    <mat-label>Contact Number</mat-label>
+                    <input matInput formControlName="contact_number" required>
+                    <mat-error
+                        *ngIf="manageOrderForm.controls.contact_number.touched && manageOrderForm.controls.contact_number.invalid">
+                        <span *ngIf="manageOrderForm.controls.contact_number.errors.required">This field is
+                            mandatory.</span>
+                        <span *ngIf="manageOrderForm.controls.contact_number.errors.pattern">This field is
+                            Invalid.</span>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" fxFlex>
+                    <mat-label>Payment Method</mat-label>
+                    <mat-select matInput formControlName="paymentMethod" required>
+                        <mat-option value="Cash">Cash</mat-option>
+                        <mat-option value="Credit Card">Credit Card</mat-option>
+                        <mat-option value="bKash">bKash</mat-option>
+                    </mat-select>
+                    <mat-error
+                        *ngIf="manageOrderForm.controls.paymentMethod.touched && manageOrderForm.controls.paymentMethod.invalid">
+                        <span *ngIf="manageOrderForm.controls.paymentMethod.errors.required">This field is
+                            mandatory.</span>
+                        <span *ngIf="manageOrderForm.controls.paymentMethod.errors.pattern">This field is
+                            Invalid.</span>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-card>
+<hr>
+<mat-card>
+    <b><span>Select Product:</span></b>
+    <form [formGroup]="manageOrderForm">
+        <div fxFlex fxLayout="column">
+            <div fxLayout="row wrap">
+                <mat-form-field appearance="fill" fxFlex>
+                    <mat-label>Category</mat-label>
+                    <mat-select formControlName="category" (selectionChange)="getProductsBycategory($event.value)">
+                        <mat-option *ngFor="let category of categories" [value]="category">{{category.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" fxFlex>
+                    <mat-label>Product</mat-label>
+                    <mat-select formControlName="product" (selectionChange)="getProductDetails($event.value)">
+                        <mat-option *ngFor="let product of products" [value]="product">{{product.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" fxFlex>
+                    <mat-label>Price</mat-label>
+                    <input matInput formControlName="price" required readonly> 
+                </mat-form-field>
+                <mat-form-field appearance="fill" fxFlex>
+                    <mat-label>Quantity</mat-label>
+                    <input matInput formControlName="price" required (keyup)= "setQuantity($event)" #input> 
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" fxFlex>
+                    <mat-label>Total</mat-label>
+                    <input matInput formControlName="total" required readonly> 
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-card>
+<!-- <hr>
+<div class="responsive_table">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumDef="name">
+            <th mat-header-cell *matHeaderCelldef>Name</th>
+            <td mat-cell *matCellDef="let element">{{element.name}}</td>
+        </ng-container>
+        <ng-container matColumDef="category">
+            <th mat-header-cell *matHeaderCelldef>Category</th>
+            <td mat-cell *matCellDef="let element">{{element.category}}</td>
+        </ng-container>
+        <ng-container matColumDef="quantity">
+            <th mat-header-cell *matHeaderCelldef>Quantity</th>
+            <td mat-cell *matCellDef="let element">{{element.quantity}}</td>
+        </ng-container>
+        <ng-container matColumDef="total">
+            <th mat-header-cell *matHeaderCelldef>Total</th>
+            <td mat-cell *matCellDef="let element">{{element.total}}</td>
+        </ng-container>
+        <ng-container >
+
+        </ng-container>
+    </table>
+</div> -->
